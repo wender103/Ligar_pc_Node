@@ -1,11 +1,10 @@
 const express = require('express');
-const net = require('net');
-
+const dgram = require('dgram');
 const app = express();
 const port = 3000;
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*'); // Permite qualquer origem (não seguro para produção)
+  res.header('Access-Control-Allow-Origin', '*'); // Permitindo qualquer origem (não seguro para produção)
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
@@ -24,19 +23,16 @@ function sendWoL() {
     buffer.write(macAddress.replace(/:/g, ''), i * 6, 6, 'hex');
   }
 
-  const client = net.createConnection({
-    port: 7,
-    localAddress: '192.168.1.255', // Usando o endereço IP de broadcast da sua rede
-  }, () => {
-    console.log('Pacote WoL enviado.');
-    client.end();
-  });
+  const client = dgram.createSocket('udp4');
 
-  client.on('error', (error) => {
-    console.error('Erro ao enviar o pacote WoL:', error);
+  client.send(buffer, 0, buffer.length, 9, '192.168.1.255', (err) => {
+    client.close();
+    if (err) {
+      console.error('Erro ao enviar o pacote WoL:', err);
+    } else {
+      console.log('Pacote WoL enviado.');
+    }
   });
-
-  client.write(buffer);
 }
 
 app.listen(port, () => {
