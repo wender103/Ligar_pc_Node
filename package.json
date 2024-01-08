@@ -6,13 +6,13 @@
     "wakeonlan": "^0.1.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
-  "name": "teste",
+  "name": "Ligar PC Node",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "index.js",
   "keywords": [],
-  "author": "",
+  "author": "Wender Natanael M. V. Dos Santos",
   "license": "ISC",
-  "description": ""
+  "description": "Vai livar o pc remotamente usando o WOL"
 }
