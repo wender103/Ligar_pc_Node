@@ -8,10 +8,12 @@
 <body>
     <h1>Wake-on-LAN</h1>
     <button onclick="ligarPC()">Ligar PC</button>
+    <input type="text" placeholder="link">
 
     <script>
         function ligarPC() {
-            fetch('https://ligar-pc-remotamente-com-node.onrender.com:3000/ligar-pc', { method: 'POST' })
+            let link = document.querySelector('input').value
+            fetch(link, { method: 'POST' })
                 .then(response => response.text())
                 .then(message => console.log(message))
                 .catch(error => console.error(error));
