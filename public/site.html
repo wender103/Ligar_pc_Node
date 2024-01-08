@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wake-on-LAN</title>
+</head>
+<body>
+    <h1>Wake-on-LAN</h1>
+    <button onclick="ligarPC()">Ligar PC</button>
+
+    <script>
+        function ligarPC() {
+            fetch('/ligar-pc', { method: 'POST' })
+                .then(response => response.text())
+                .then(message => console.log(message))
+                .catch(error => console.error(error));
+        }
+    </script>
+</body>
+</html>
