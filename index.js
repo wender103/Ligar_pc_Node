@@ -11,9 +11,10 @@ app.use(express.static('public'));
 app.use(express.json());
 
 app.post('/ligar-pc', (req, res) => {
+    console.log(req, res)
     //Meu pc 'AC-22-0B-2E-13-5C'
     //Not '80-EE-73-0D-AA-09'
-    const macAddress = req.body.macAddress || '80:EE:73:0D:AA:09';
+    const macAddress = req.body.macAddress || '80-EE-73-0D-AA-09';
 
     wakeonlan.wake(macAddress, (err) => {
         if (err) {
