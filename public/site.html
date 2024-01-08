@@ -11,7 +11,7 @@
 
     <script>
         function ligarPC() {
-            fetch('/ligar-pc', { method: 'POST' })
+            fetch('https://ligar-pc-remotamente-com-node.onrender.com:3000/ligar-pc', { method: 'POST' })
                 .then(response => response.text())
                 .then(message => console.log(message))
                 .catch(error => console.error(error));
