@@ -1,32 +1,42 @@
-const express = require('express');
-const wakeonlan = require('wake_on_lan');
-const cors = require('cors');
+const http = require('http');
+const net = require('net');
 
-const app = express();
-const port = process.env.PORT || 3000;
+const macAddress = '80:EE:73:0D:AA:09'; // Substitua pelo endereço MAC do dispositivo de destino
 
-// Permitir solicitações de qualquer origem (CORS)
-app.use(cors({ origin: '*' }));
-app.use(express.static('public'));
-app.use(express.json());
-
-app.post('/ligar-pc', (req, res) => {
-    console.log(req, res)
-    //Meu pc 'AC-22-0B-2E-13-5C'
-    //Not '80-EE-73-0D-AA-09'
-    const macAddress = req.body.macAddress || '80-EE-73-0D-AA-09';
-
-    wakeonlan.wake(macAddress, (err) => {
-        if (err) {
-            console.error('Erro ao enviar o comando Wake-on-LAN:', err);
-            res.status(500).send('Erro ao ligar o PC');
-        } else {
-            console.log('Comando Wake-on-LAN enviado com sucesso!');
-            res.send('Comando Wake-on-LAN enviado com sucesso!');
-        }
-    });
+const server = http.createServer((req, res) => {
+  if (req.method === 'POST' && req.url === '/wol') {
+    sendWoL();
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Comando WoL enviado com sucesso!');
+  } else {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Endpoint não encontrado.');
+  }
 });
 
-app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+function sendWoL() {
+  const buffer = Buffer.alloc(17 * 6);
+  for (let i = 0; i < 17; i++) {
+    buffer.write(macAddress.replace(/:/g, ''), i * 6, 6, 'hex');
+  }
+
+  const client = net.createConnection({
+    port: 7,
+    localAddress: '192.168.1.255', // Usando o endereço IP de broadcast da sua rede
+  }, () => {
+    console.log('Pacote WoL enviado.');
+    client.end();
+  });
+
+  client.on('error', (error) => {
+    console.error('Erro ao enviar o pacote WoL:', error);
+  });
+
+  client.write(buffer);
+}
+
+const PORT = 3000;
+
+server.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
