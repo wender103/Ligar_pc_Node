@@ -1,15 +1,18 @@
 const express = require('express');
 const wakeonlan = require('wake_on_lan');
+const cors = require('cors');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
+app.use(cors()); // Permitir solicitações de qualquer origem
 app.use(express.static('public'));
+app.use(express.json());
 
 app.post('/ligar-pc', (req, res) => {
-    //Meu pc 'AC-22-0B-2E-13-5C'
+        //Meu pc 'AC-22-0B-2E-13-5C'
     //Not '80-EE-73-0D-AA-09'
-    const macAddress = '80-EE-73-0D-AA-09'; // Substitua pelo endereço MAC do seu PC
+    const macAddress = req.body.macAddress || '80:EE:73:0D:AA:09'; // Pega o endereço MAC do corpo da requisição ou usa um padrão
     
     // Envia o comando Wake-on-LAN
     wakeonlan.wake(macAddress, (err) => {

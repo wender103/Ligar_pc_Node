@@ -8,15 +8,28 @@
 <body>
     <h1>Wake-on-LAN</h1>
     <button onclick="ligarPC()">Ligar PC</button>
-    <input type="text" placeholder="link">
+    <input type="text" id="macAddress" placeholder="Endereço MAC">
+    <input type="text" id="link" placeholder="link">
 
     <script>
         function ligarPC() {
-            let link = document.querySelector('input').value
-            fetch(link, { method: 'POST' })
-                .then(response => response.text())
-                .then(message => console.log(message))
-                .catch(error => console.error(error));
+            const macAddress = document.getElementById('macAddress').value;
+            let link = document.getElementById('link').value
+
+            if(link.value == '') {
+                link = 'https://ligar-pc-remotamente-com-node.onrender.com/ligar-pc';
+            }
+
+            fetch(link, { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ macAddress }),
+            })
+            .then(response => response.text())
+            .then(message => console.log(message))
+            .catch(error => console.error(error));
         }
     </script>
 </body>
