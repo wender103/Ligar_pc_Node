@@ -16,7 +16,7 @@ app.post('/wol', (req, res) => {
 });
 
 function sendWoL() {
-  const macAddress = '80-EE-73-0D-AA-09'; // Substitua pelo endereço MAC do dispositivo de destino
+  const macAddress = 'AC-22-0B-2E-13-5C'; // Substitua pelo endereço MAC do dispositivo de destino
   const buffer = Buffer.alloc(17 * 6);
 
   for (let i = 0; i < 17; i++) {
